@@ -9,7 +9,7 @@ WooCommerce XenithPay is a payment gateway plugin for WooCommerce that integrate
 
 ## Installation
 1. Download the plugin files or clone the repository.
-2. Upload the plugin folder to the `/wp-content/plugins/` directory. Or you can upload it via wordpress plugin.
+2. Extract the plugin zip to the `/wp-content/plugins/` directory. Or you can upload it via wordpress plugin.
 3. Activate the plugin through the 'Plugins' menu in WordPress.
 
 ## How to Use
@@ -18,3 +18,4 @@ WooCommerce XenithPay is a payment gateway plugin for WooCommerce that integrate
 3. Configure the gateway settings with your XenithPay credentials and Merchant credentials.
 4. Save changes and start accepting payments via XenithPay.
 
+For more information, visit https://docs.xenithpay.com/ to see more documentation.
