@@ -4,12 +4,12 @@ if (!defined('ABSPATH')) exit;
 class WC_Gateway_XenithPay extends WC_Payment_Gateway {
 
 	private $next_secret_key;
-	private $payment_url;
+	private $payment_url; // /api/payments/init
 	private $web_name;
 	private $merchant_num;
 
-    private $api_key;
-    private $secret_key;
+    // private $api_key;
+    // private $secret_key;
 
     protected $webhook_secret_key;
 
@@ -45,8 +45,8 @@ class WC_Gateway_XenithPay extends WC_Payment_Gateway {
         $this->xenith_callback_url = home_url() . '/wc-api/wc_xenith_callback';
 
         /////
-        $this->api_key = $this->get_option('api_key', '');
-        $this->secret_key = $this->get_option('secret_key', '');
+        // $this->api_key = $this->get_option('api_key', '');
+        // $this->secret_key = $this->get_option('secret_key', '');
         /////
 
         // Debug logging
@@ -103,22 +103,22 @@ class WC_Gateway_XenithPay extends WC_Payment_Gateway {
                 'default'     => '',
                 'desc_tip'    => true,
             ],
-
-            'api_key' => [
-                'title'       => 'API Key',
-                'type'        => 'password',
-                'description' => 'Enter your XenithPay API Key',
-                'default'     => '',
-                'desc_tip'    => true,
-            ],
-            'secret_key' => [
-                'title'       => 'Secret Key',
-                'type'        => 'password',
-                'description' => 'Enter your XenithPay Secret Key',
-                'default'     => '',
-                'desc_tip'    => true,
-            ],
-
+///////////////////////////////////////////////////////////////////////////////////
+            // 'api_key' => [
+            //     'title'       => 'API Key',
+            //     'type'        => 'password',
+            //     'description' => 'Enter your XenithPay API Key',
+            //     'default'     => '',
+            //     'desc_tip'    => true,
+            // ],
+            // 'secret_key' => [
+            //     'title'       => 'Secret Key',
+            //     'type'        => 'password',
+            //     'description' => 'Enter your XenithPay Secret Key',
+            //     'default'     => '',
+            //     'desc_tip'    => true,
+            // ],
+///////////////////////////////////////////////////////////////////////////////////
             'webhook_secret_key' => [
                 'title' => 'Webhook Signature Secret Key',
                 'type'  => 'password',
@@ -231,11 +231,24 @@ class WC_Gateway_XenithPay extends WC_Payment_Gateway {
                 'Content-Type' => 'application/json',
                 'X-Timestamp' => $timestamp,
                 'X-Signature' => $signature,
-                'X-Idempotency-Key' => uniqid('antiqpay-', true),
+                'X-Idempotency-Key' => uniqid($this->web_name . '-', true),
                 'Accept' => 'application/json',
             ],
             'timeout' => 60,
         ]);
+
+        // $response = wp_remote_post($this->payment_url, [
+        //     'body'    => $body,
+        //     'headers' => [
+        //         'Content-Type' => 'application/json',
+        //         'Xenith-Api-Key' => $this->api_key,
+        //         'Xenith-Request-Timestamp' => $timestamp,
+        //         'Xenith-Request-Signature' => $signature,
+        //         'X-Idempotency-Key' => uniqid('antiqpay-', true),
+        //         'Accept' => 'application/json',
+        //     ],
+        //     'timeout' => 60,
+        // ]);
 
         // ERROR: WordPress HTTP error
         if (is_wp_error($response)) {
@@ -283,6 +296,7 @@ class WC_Gateway_XenithPay extends WC_Payment_Gateway {
     }
     
     public function store_api_payment_handler( $order, $request_data ) {
+        // Tandai order complete (sandbox)
         $order->payment_complete();
 
         return array(
